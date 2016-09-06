@@ -20,12 +20,14 @@ package org.apache.maven.surefire.junitcore;
  */
 
 import java.util.Map;
-import org.apache.maven.surefire.report.ConsoleLogger;
+import org.apache.maven.plugin.surefire.log.api.ConsoleLogger;
 import org.apache.maven.surefire.report.ConsoleOutputReceiver;
 import org.apache.maven.surefire.report.ReportEntry;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.report.RunListener;
 import org.apache.maven.surefire.testset.TestSetFailedException;
+
+import static org.apache.maven.surefire.junitcore.TestMethod.getThreadTestMethod;
 
 /**
  * Handles responses from concurrent junit
@@ -151,7 +153,7 @@ public abstract class ConcurrentRunListener
 
     private TestMethod getOrCreateThreadAttachedTestMethod( ReportEntry description )
     {
-        TestMethod threadTestMethod = TestMethod.getThreadTestMethod();
+        TestMethod threadTestMethod = getThreadTestMethod();
         if ( threadTestMethod != null )
         {
             return threadTestMethod;
@@ -173,7 +175,7 @@ public abstract class ConcurrentRunListener
 
     TestMethod getTestMethod()
     {
-        return TestMethod.getThreadTestMethod();
+        return getThreadTestMethod();
     }
 
     TestSet getTestSet( ReportEntry description )
@@ -200,7 +202,7 @@ public abstract class ConcurrentRunListener
 
     public void writeTestOutput( byte[] buf, int off, int len, boolean stdout )
     {
-        TestMethod threadTestMethod = TestMethod.getThreadTestMethod();
+        TestMethod threadTestMethod = getThreadTestMethod();
         if ( threadTestMethod != null )
         {
             final LogicalStream logicalStream = threadTestMethod.getLogicalStream();

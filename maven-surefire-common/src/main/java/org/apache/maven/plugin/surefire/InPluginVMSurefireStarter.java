@@ -19,6 +19,7 @@ package org.apache.maven.plugin.surefire;
  * under the License.
  */
 
+import org.apache.maven.plugin.surefire.log.api.ConsoleLogger;
 import org.apache.maven.surefire.booter.ProviderConfiguration;
 import org.apache.maven.surefire.booter.ProviderFactory;
 import org.apache.maven.surefire.booter.StartupConfiguration;
@@ -45,20 +46,20 @@ import java.util.Map;
  */
 public class InPluginVMSurefireStarter
 {
-
     private final StartupConfiguration startupConfiguration;
-
     private final StartupReportConfiguration startupReportConfiguration;
-
     private final ProviderConfiguration providerConfiguration;
+    private final ConsoleLogger consoleLogger;
 
     public InPluginVMSurefireStarter( @Nonnull StartupConfiguration startupConfiguration,
                                       @Nonnull ProviderConfiguration providerConfiguration,
-                                      @Nonnull StartupReportConfiguration startupReportConfiguration )
+                                      @Nonnull StartupReportConfiguration startupReportConfiguration,
+                                      @Nonnull ConsoleLogger consoleLogger )
     {
         this.startupConfiguration = startupConfiguration;
         this.startupReportConfiguration = startupReportConfiguration;
         this.providerConfiguration = providerConfiguration;
+        this.consoleLogger = consoleLogger;
     }
 
     public RunResult runSuitesInProcess( @Nonnull DefaultScanResult scanResult )
@@ -75,12 +76,13 @@ public class InPluginVMSurefireStarter
 
         CommonReflector surefireReflector = new CommonReflector( testsClassLoader );
 
-        final Object factory = surefireReflector.createReportingReporterFactory( startupReportConfiguration );
+        Object factory = surefireReflector.createReportingReporterFactory( startupReportConfiguration, consoleLogger );
 
         try
         {
             return ProviderFactory.invokeProvider( null, testsClassLoader, factory,
-                                                   providerConfiguration, false, startupConfiguration, true );
+                                                         providerConfiguration, false, startupConfiguration, true
+            );
         }
         catch ( InvocationTargetException e )
         {

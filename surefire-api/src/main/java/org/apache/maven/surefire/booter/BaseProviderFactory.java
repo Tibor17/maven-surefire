@@ -21,8 +21,7 @@ package org.apache.maven.surefire.booter;
 
 import org.apache.maven.surefire.cli.CommandLineOption;
 import org.apache.maven.surefire.providerapi.ProviderParameters;
-import org.apache.maven.surefire.report.ConsoleLogger;
-import org.apache.maven.surefire.report.DefaultDirectConsoleReporter;
+import org.apache.maven.plugin.surefire.log.api.ConsoleLogger;
 import org.apache.maven.surefire.report.ReporterConfiguration;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.testset.DirectoryScannerParameters;
@@ -41,6 +40,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.emptyList;
+
 /**
  * @author Kristian Rosenvold
  */
@@ -55,7 +56,7 @@ public class BaseProviderFactory
 
     private final boolean insideFork;
 
-    private List<CommandLineOption> mainCliOptions = Collections.emptyList();
+    private List<CommandLineOption> mainCliOptions = emptyList();
 
     private Map<String, String> providerProperties;
 
@@ -132,7 +133,7 @@ public class BaseProviderFactory
     {
         boolean trim = reporterConfiguration.isTrimStackTrace();
         PrintStream out = reporterConfiguration.getOriginalSystemOut();
-        return insideFork ? new ForkingRunListener( out, ROOT_CHANNEL, trim ) : new DefaultDirectConsoleReporter( out );
+        return insideFork ? new ForkingRunListener( out, ROOT_CHANNEL, trim ) : null;
     }
 
     public void setTestRequest( TestRequest testRequest )

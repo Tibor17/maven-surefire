@@ -24,7 +24,6 @@ import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.maven.plugin.surefire.report.DefaultReporterFactory;
-import org.apache.maven.surefire.report.DefaultConsoleReporter;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.report.RunListener;
 import org.apache.maven.surefire.report.RunStatistics;

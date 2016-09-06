@@ -23,6 +23,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
+import static java.lang.System.setErr;
+import static java.lang.System.setOut;
+
 /**
  * Deals with system.out/err.
  * <p/>
@@ -31,9 +34,8 @@ public class ConsoleOutputCapture
 {
     public static void startCapture( ConsoleOutputReceiver target )
     {
-        System.setOut( new ForwardingPrintStream( true, target ) );
-
-        System.setErr( new ForwardingPrintStream( false, target ) );
+        setOut( new ForwardingPrintStream( true, target ) );
+        setErr( new ForwardingPrintStream( false, target ) );
     }
 
     private static class ForwardingPrintStream

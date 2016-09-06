@@ -22,7 +22,7 @@ package org.apache.maven.surefire.junitcore;
 import org.apache.maven.surefire.common.junit4.Notifier;
 import org.apache.maven.surefire.junitcore.pc.ParallelComputer;
 import org.apache.maven.surefire.junitcore.pc.ParallelComputerBuilder;
-import org.apache.maven.surefire.report.ConsoleLogger;
+import org.apache.maven.plugin.surefire.log.api.ConsoleLogger;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.TestsToRun;
 import org.junit.Ignore;

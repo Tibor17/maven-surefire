@@ -20,7 +20,7 @@ package org.apache.maven.surefire.junitcore;
  */
 
 import java.util.Map;
-import org.apache.maven.surefire.report.ConsoleLogger;
+import org.apache.maven.plugin.surefire.log.api.ConsoleLogger;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 

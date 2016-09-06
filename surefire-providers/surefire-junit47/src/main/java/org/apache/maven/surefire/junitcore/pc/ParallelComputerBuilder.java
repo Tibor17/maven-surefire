@@ -35,7 +35,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
 import org.apache.maven.surefire.junitcore.JUnitCoreParameters;
-import org.apache.maven.surefire.report.ConsoleLogger;
+import org.apache.maven.plugin.surefire.log.api.ConsoleLogger;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 import org.apache.maven.surefire.util.internal.DaemonThreadFactory;
 import org.junit.internal.runners.ErrorReportingRunner;

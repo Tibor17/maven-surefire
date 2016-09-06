@@ -19,12 +19,15 @@ package org.apache.maven.plugin.surefire.report;
  * under the License.
  */
 
-import java.io.BufferedOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.List;
+
+import org.apache.maven.plugin.surefire.log.DefaultColoredConsoleMessageBuilder;
+import org.apache.maven.plugin.surefire.log.api.ConsoleLogger;
 import org.apache.maven.surefire.report.ReportEntry;
+import org.apache.maven.plugin.surefire.log.api.ColoredConsoleMessageBuilder;
+import org.apache.maven.plugin.surefire.log.api.Level;
+
+import static org.apache.maven.plugin.surefire.log.api.Level.resolveLevel;
 
 /**
  * Base class for console reporters.
@@ -40,50 +43,64 @@ public class ConsoleReporter
 
     private static final String TEST_SET_STARTING_PREFIX = "Running ";
 
-    private static final int BUFFER_SIZE = 4096;
+    private final ConsoleLogger logger;
 
-    private final PrintWriter writer;
+    private final ColoredConsoleMessageBuilder logMessageBuilder;
 
-    public ConsoleReporter( PrintStream originalSystemOut )
+    public ConsoleReporter( ConsoleLogger logger )
     {
-        OutputStreamWriter out = new OutputStreamWriter( new BufferedOutputStream( originalSystemOut, BUFFER_SIZE ) );
-        writer = new PrintWriter( out );
+        this.logger = logger;
+        logMessageBuilder = new DefaultColoredConsoleMessageBuilder();
+    }
+
+    public ConsoleLogger getConsoleLogger()
+    {
+        return logger;
     }
 
     public void testSetStarting( ReportEntry report )
     {
-        writeMessage( getTestSetStartingMessage( report ) );
-    }
-
-    public void writeMessage( String message )
-    {
-        writer.print( message );
-        writer.flush();
-    }
-
-    public void writeLnMessage( String message )
-    {
-        writer.println( message );
-        writer.flush();
+        logger.info( trimTrailingNewLine( logMessageBuilder.toColorless( getTestSetStartingMessage( report ) ) ) );
     }
 
     public void testSetCompleted( WrappedReportEntry report, TestSetStats testSetStats, List<String> testResults )
     {
-        writeMessage( testSetStats.getTestSetSummary( report ) );
+        boolean success = testSetStats.getCompletedCount() > 0;
+        boolean failures = testSetStats.getFailures() > 0;
+        boolean errors = testSetStats.getErrors() > 0;
+        boolean skipped = testSetStats.getSkipped() > 0;
+        boolean flakes = testSetStats.getSkipped() > 0;
+        Level level = resolveLevel( success, failures, errors, skipped, flakes );
 
-        if ( testResults != null )
+        println( trimTrailingNewLine( testSetStats.getTestSetSummary( report ) ), level );
+        for ( String testResult : testResults )
         {
-            for ( String testResult : testResults )
-            {
-                writeLnMessage( testResult );
-            }
+            println( testResult, level );
         }
     }
 
-
     public void reset()
     {
-        writer.flush();
+    }
+
+    private void println( String message, Level level )
+    {
+        switch ( level )
+        {
+            case FAILURE:
+                logger.error( logMessageBuilder.format( message, level ) );
+                break;
+            case UNSTABLE:
+                logger.warning( logMessageBuilder.format( message, level ) );
+                break;
+            default:
+                logger.info( logMessageBuilder.format( message, level ) );
+        }
+    }
+
+    public static String trimTrailingNewLine( String message )
+    {
+        return message != null && message.endsWith( "\n" ) ? message.substring( 0, message.length() - 1 ) : message;
     }
 
     /**
@@ -95,8 +112,6 @@ public class ConsoleReporter
      */
     private static String getTestSetStartingMessage( ReportEntry report )
     {
-        return TEST_SET_STARTING_PREFIX + report.getNameWithGroup() + "\n";
+        return TEST_SET_STARTING_PREFIX + report.getNameWithGroup();
     }
-
-
 }

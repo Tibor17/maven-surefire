@@ -30,7 +30,7 @@ import org.apache.maven.surefire.common.junit48.JUnit48Reflector;
 import org.apache.maven.surefire.common.junit48.JUnit48TestChecker;
 import org.apache.maven.surefire.providerapi.AbstractProvider;
 import org.apache.maven.surefire.providerapi.ProviderParameters;
-import org.apache.maven.surefire.report.ConsoleLogger;
+import org.apache.maven.plugin.surefire.log.api.ConsoleLogger;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.suite.RunResult;
 import org.apache.maven.surefire.testset.TestListResolver;

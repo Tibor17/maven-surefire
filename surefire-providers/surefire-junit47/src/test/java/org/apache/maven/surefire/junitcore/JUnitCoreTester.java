@@ -22,7 +22,6 @@ package org.apache.maven.surefire.junitcore;
 import org.apache.maven.plugin.surefire.report.DefaultReporterFactory;
 import org.apache.maven.surefire.report.ConsoleOutputCapture;
 import org.apache.maven.surefire.report.ConsoleOutputReceiver;
-import org.apache.maven.surefire.report.DefaultConsoleReporter;
 import org.apache.maven.surefire.report.ReporterFactory;
 import org.apache.maven.surefire.report.RunListener;
 import org.apache.maven.surefire.testset.TestSetFailedException;
@@ -32,6 +31,9 @@ import org.junit.runner.Result;
 
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
+
+import static org.apache.maven.surefire.junitcore.ConcurrentRunListener.createInstance;
+import static org.apache.maven.surefire.report.ConsoleOutputCapture.startCapture;
 
 /**
  * @author Kristian Rosenvold
@@ -60,10 +62,9 @@ public class JUnitCoreTester
         {
 
             final HashMap<String, TestSet> classMethodCounts = new HashMap<String, TestSet>();
-            RunListener reporter =
-                ConcurrentRunListener.createInstance( classMethodCounts, reporterManagerFactory, parallelClasses, false,
-                                                      new DefaultConsoleReporter( System.out ) );
-            ConsoleOutputCapture.startCapture( (ConsoleOutputReceiver) reporter );
+            RunListener reporter = createInstance( classMethodCounts, reporterManagerFactory, parallelClasses, false,
+                                      new DefaultConsoleReporter( System.out ) );
+            startCapture( (ConsoleOutputReceiver) reporter );
 
             JUnitCoreRunListener runListener = new JUnitCoreRunListener( reporter, classMethodCounts );
             JUnitCore junitCore = new JUnitCore();

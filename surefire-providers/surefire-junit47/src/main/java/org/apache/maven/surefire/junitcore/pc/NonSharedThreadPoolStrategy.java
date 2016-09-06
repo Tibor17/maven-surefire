@@ -19,7 +19,7 @@ package org.apache.maven.surefire.junitcore.pc;
  * under the License.
  */
 
-import org.apache.maven.surefire.report.ConsoleLogger;
+import org.apache.maven.plugin.surefire.log.api.ConsoleLogger;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
