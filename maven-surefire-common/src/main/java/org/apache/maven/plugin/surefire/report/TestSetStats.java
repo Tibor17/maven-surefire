@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import org.apache.maven.surefire.report.RunStatistics;
+
 /**
  * Maintains per-thread test result state. Not thread safe.
  */
@@ -164,10 +166,8 @@ public class TestSetStats
 
     public String getTestSetSummary( WrappedReportEntry reportEntry )
     {
-        String summary =
-                "Tests run: " + completedCount
-                        +  ", Failures: " + failures + ", Errors: " + errors + ", Skipped: " + skipped + ", "
-                        + reportEntry.getElapsedTimeVerbose();
+        String summary = RunStatistics.getSummary( completedCount, failures, errors, skipped, 0 ) + ", "
+            + reportEntry.getElapsedTimeVerbose();
 
         if ( failures > 0 || errors > 0 )
         {

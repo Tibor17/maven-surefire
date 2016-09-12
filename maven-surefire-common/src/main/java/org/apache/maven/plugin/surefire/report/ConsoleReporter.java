@@ -26,6 +26,8 @@ import org.apache.maven.plugin.surefire.log.api.ConsoleLogger;
 import org.apache.maven.surefire.report.ReportEntry;
 import org.apache.maven.plugin.surefire.log.api.ColoredConsoleMessageBuilder;
 import org.apache.maven.plugin.surefire.log.api.Level;
+import org.apache.maven.shared.utils.logging.MessageBuilder;
+import org.apache.maven.shared.utils.logging.MessageUtils;
 
 import static org.apache.maven.plugin.surefire.log.api.Level.resolveLevel;
 
@@ -112,6 +114,24 @@ public class ConsoleReporter
      */
     private static String getTestSetStartingMessage( ReportEntry report )
     {
-        return TEST_SET_STARTING_PREFIX + report.getNameWithGroup();
+        MessageBuilder builder = MessageUtils.buffer();
+
+        String nameWithGroup = report.getNameWithGroup();
+
+        int dot = nameWithGroup.lastIndexOf( '.' ) + 1;
+
+        String name;
+        String prefix;
+        if ( dot > 1 )
+        {
+            prefix = nameWithGroup.substring( 0, dot );
+            name = nameWithGroup.substring( dot );
+        }
+        else
+        {
+            prefix = "";
+            name = nameWithGroup;
+        }
+        return builder.a( TEST_SET_STARTING_PREFIX ).a( prefix ).strong( name ).toString();
     }
 }

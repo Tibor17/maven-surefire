@@ -72,13 +72,13 @@ public enum Level
     public static Level resolveLevel( boolean hasSuccessful, boolean hasFailure, boolean hasError,
                                       boolean hasSkipped, boolean hasFlake )
     {
-        boolean isRed = hasFailure | hasError;
-        if ( isRed )
+        boolean isFailure = hasFailure | hasError;
+        if ( isFailure )
         {
             return FAILURE;
         }
-        boolean isYellow = hasSkipped | hasFlake;
-        if ( isYellow )
+        boolean isWarning = hasSkipped | hasFlake; // not convinced skipped should trigger warning
+        if ( isWarning )
         {
             return UNSTABLE;
         }

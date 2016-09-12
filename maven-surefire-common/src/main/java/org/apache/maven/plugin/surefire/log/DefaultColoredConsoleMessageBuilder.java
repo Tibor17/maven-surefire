@@ -21,10 +21,6 @@ package org.apache.maven.plugin.surefire.log;
 
 import org.apache.maven.plugin.surefire.log.api.ColoredConsoleMessageBuilder;
 import org.apache.maven.plugin.surefire.log.api.Level;
-import org.apache.maven.shared.utils.logging.MessageBuilder;
-
-import static java.lang.Integer.numberOfLeadingZeros;
-import static org.apache.maven.shared.utils.logging.MessageUtils.buffer;
 
 /**
  * wrapper of org.apache.maven.shared.utils.logging.MessageUtils.
@@ -37,42 +33,42 @@ public final class DefaultColoredConsoleMessageBuilder
 {
     public String toDebug( CharSequence message )
     {
-        return createAnsiBuilder( message ).debug( message ).toString();
+        return message.toString();
     }
 
     public String toInfo( CharSequence message )
     {
-        return createAnsiBuilder( message ).info( message ).toString();
+        return message.toString();
     }
 
     public String toWarning( CharSequence message )
     {
-        return createAnsiBuilder( message ).warning( message ).toString();
+        return message.toString();
     }
 
     public String toError( CharSequence message )
     {
-        return createAnsiBuilder( message ).error( message ).toString();
+        return message.toString();
     }
 
     public String toSuccess( CharSequence message )
     {
-        return createAnsiBuilder( message ).success( message ).toString();
+        return message.toString();
     }
 
     public String toUnstable( CharSequence message )
     {
-        return createAnsiBuilder( message ).warning( message ).toString();
+        return message.toString();
     }
 
     public String toFailure( CharSequence message )
     {
-        return createAnsiBuilder( message ).failure( message ).toString();
+        return message.toString();
     }
 
     public String toColorless( CharSequence message )
     {
-        return createAnsiBuilder( message ).a( message ).toString();
+        return message.toString();
     }
 
     public String format( CharSequence message, Level level )
@@ -98,15 +94,5 @@ public final class DefaultColoredConsoleMessageBuilder
             default:
                 throw new IllegalArgumentException( "unknown enum '" + level.name() + "'" );
         }
-    }
-
-    private static MessageBuilder createAnsiBuilder( CharSequence message )
-    {
-        return buffer( bufferSize( message ) );
-    }
-
-    private static int bufferSize( CharSequence message )
-    {
-        return 32 - numberOfLeadingZeros( message.length() );
     }
 }

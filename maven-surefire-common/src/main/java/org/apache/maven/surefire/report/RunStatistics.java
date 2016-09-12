@@ -20,6 +20,8 @@ package org.apache.maven.surefire.report;
  */
 
 import org.apache.maven.plugin.surefire.report.TestSetStats;
+import org.apache.maven.shared.utils.logging.MessageBuilder;
+import org.apache.maven.shared.utils.logging.MessageUtils;
 import org.apache.maven.surefire.suite.RunResult;
 
 /**
@@ -100,13 +102,55 @@ public class RunStatistics
 
     public synchronized String getSummary()
     {
-        String summary =
-            "Tests run: " + completedCount + ", Failures: " + failures + ", Errors: " + errors + ", Skipped: "
-                + skipped;
+        return getSummary( completedCount, failures, errors, skipped, flakes );
+    }
+
+    public static String getSummary( int completedCount, int failures, int errors, int skipped, int flakes )
+    {
+        MessageBuilder builder = MessageUtils.buffer();
+
+        builder.a( "Tests " );
+
+        if ( completedCount == 0 )
+        {
+            builder.a( "run: 0" );
+        }
+        else
+        {
+            builder.success( "run: " + completedCount );
+        }
+
+        builder.a( ", " );
+
+        if ( failures == 0 )
+        {
+            builder.a( "Failures: 0" );
+        }
+        else
+        {
+            builder.failure( "Failures: " + failures );
+        }
+
+        builder.a( ", " );
+
+        if ( errors == 0 )
+        {
+            builder.a( "Errors: 0" );
+        }
+        else
+        {
+            builder.failure( "Errors: " + errors );
+        }
+
+        builder.a( ", Skipped: " + skipped );
+
         if ( flakes > 0 )
         {
-            summary += ", Flakes: " + flakes;
+            builder.a( ", " );
+
+            builder.warning( "Flakes: " + flakes );
         }
-        return summary;
+
+        return builder.toString();
     }
 }
