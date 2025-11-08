@@ -33,8 +33,12 @@ jobs:
       verify-goal: 'clean install -nsu -P run-its'
       verify-fail-fast: false
       failure-upload-path: |
-        surefire-its/target/*/log.txt
-        surefire-its/target/**/surefire-reports/*
-        surefire-its/target/**/failsafe-reports/*
-      timeout-minutes: 600
+        maven-surefire/**/target/**/*.*
+        !maven-surefire/**/target/**/*.java
+        !maven-surefire/**/target/**/*.class
+        !maven-surefire/**/target/**/*.jar
+        !maven-surefire/**/target/**/*.tar.gz
+        !maven-surefire/**/target/**/*.tgz
+        !maven-surefire/**/target/**/*.zip
+      timeout-minutes: 900
       os-matrix: '[ "ubuntu-latest", "windows-2022", "macos-latest" ]'
